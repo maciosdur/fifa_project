@@ -1,0 +1,25 @@
+
+--- nationality_name ---
+England: 8.93%
+Germany: 6.31%
+Spain: 5.64%
+France: 5.09%
+Argentina: 4.99%
+
+--- club_name ---
+Real Betis Balompié: 0.17%
+Everton: 0.17%
+Borussia Mönchengladbach: 0.17%
+Arsenal: 0.17%
+RC Celta de Vigo: 0.17%
+
+--- preferred_foot ---
+Right: 76.27%
+Left: 23.73%
+
+--- player_positions ---
+CB: 12.59%
+GK: 11.08%
+ST: 9.20%
+CDM, CM: 4.95%
+CM: 3.77%
