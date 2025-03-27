@@ -352,7 +352,6 @@ sns.histplot(
 plt.title('Rozkład wartości rynkowej w zależności od wieku', pad=20, fontsize=16)
 plt.xlabel('Wiek', fontsize=14)
 plt.ylabel('Wartość rynkowa (EUR)', fontsize=14)
-plt.legend()
 save_plot(plt, "age_vs_value_distribution.png")
 plt.close()
 # =============================================
@@ -422,31 +421,6 @@ plt.yscale('log')  # Skala logarytmiczna = regresja wykładnicza
 plt.title('Regresja wykładnicza (skala log)')
 save_plot(plt,'simple_exp_regression.png')
 plt.close()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# 3. Zaawansowana analiza
-
-
 
 print("\nAnaliza zakończona pomyślnie!")
 print(f"Wyniki zapisane w folderze: {output_dir}")
