@@ -29,9 +29,11 @@ df = load_data('players_22.csv')
 analysis_cols = [
     'overall', 'potential', 'age', 'height_cm', 'weight_kg',
     'nationality_name', 'club_name', 'value_eur', 'wage_eur',
-    'preferred_foot', 'player_positions'
+    'preferred_foot', 'player_positions', 'short_name'
 ]
 df = df[analysis_cols].copy()
+df.to_csv(os.path.join(output_dir, "processed_players_data.csv"), index=False, encoding='utf-8')
+print("DataFrame zapisany do pliku: processed_players_data.csv")
 
 # Funkcja do zapisywania wykresów
 def save_plot(fig, filename):
@@ -77,8 +79,8 @@ numerical_stats = calculate_numerical_stats(df)
 categorical_stats = calculate_categorical_stats(df)
 
 # Zapis do plików CSV
-numerical_stats.to_csv(os.path.join(output_dir, "numerical_stats.csv"), float_format='%.2f')
-categorical_stats.to_csv(os.path.join(output_dir, "categorical_stats.csv"), index=False)
+numerical_stats.to_csv(os.path.join(output_dir, "numerical_stats.csv"), float_format='%.2f', encoding='utf-8')
+categorical_stats.to_csv(os.path.join(output_dir, "categorical_stats.csv"), index=False, float_format='%.2f', encoding='utf-8')
 
 # Dodatkowe zapisanie rozkładu klas kategorialnych do osobnego pliku
 with open(os.path.join(output_dir, "categorical_distributions.txt"), 'w') as f:
@@ -175,6 +177,21 @@ plt.ylabel('Wartość (EUR)', fontsize=12)
 save_plot(plt, "boxplot_foot_value.png")
 plt.close()
 
+# BOXPLOT 2.2 : Wartość rynkowa vs preferowana noga z kropkami
+plt.figure(figsize=(12, 6))
+sns.boxplot(
+    data=df,
+    x='preferred_foot',
+    y='value_eur',
+    hue='preferred_foot',  
+    palette='coolwarm'
+)
+plt.title('Wartość rynkowa wg preferowanej nogi (boxplot)', fontsize=14)
+plt.xlabel('Preferowana noga', fontsize=12)
+plt.ylabel('Wartość (EUR)', fontsize=12)
+save_plot(plt, "boxplot_foot_value_fliers.png")
+plt.close()
+
 # VIOLINPLOT 1: Rozkład wieku dla top 5 narodowości
 top_countries = df['nationality_name'].value_counts().head(5).index
 plt.figure(figsize=(14, 7))
@@ -217,7 +234,7 @@ plt.close()
 # Zakres prac na ocenę 4.0 z części I
 # =============================================
 # 1. Error bars dla cech numerycznych
-df['age_group'] = pd.cut(df['age'], bins=[15, 20, 25, 30, 35, 40, 50])
+df['age_group'] = pd.cut(df['age'], bins=[15, 20, 25, 30, 35, 40])
 plt.figure(figsize=(14, 7))
 sns.pointplot(
     data=df,
@@ -246,9 +263,9 @@ for feature in numeric_features:
     sns.histplot(
         data=df,
         x=feature,
-        bins=30,
+        bins=45,
         color='skyblue',
-        edgecolor='black'  # Lepsza widoczność słupków
+        edgecolor='black'  
     )
     plt.title(f'Rozkład wartości dla cechy: {feature}')
     plt.xlabel(feature)
@@ -365,10 +382,10 @@ plt.title("Korelacje między cechami numerycznymi")
 save_plot(plt, "correlation_heatmap.png")
 
 # =============================================
-# ANALIZA REGRESJI LINIOWEJ DLA OCENY 5.0
+# Zakres prac na ocenę 5.0 z części I
 # =============================================
 
-
+# Liniowa regresja: ocena overall a wartość rynkowa
 plt.figure(figsize=(12, 8))
 sns.regplot(
     data=df,
@@ -386,19 +403,6 @@ plt.grid(True, alpha=0.3)
 save_plot(plt, "linear_regression_overall_value.png")
 plt.close()
 
-# Najprostsza wersja
-plt.figure(figsize=(10, 6))
-sns.lmplot(
-    x="value_eur",
-    y="wage_eur",
-    data=df,
-    height=6,
-    aspect=1.5
-)
-plt.title('Relacja: wartość rynkowa vs zarobki')
-save_plot(plt, "simple_regression_value_wage.png")
-plt.close()
-
 # Wersja z podziałem na preferowaną nogę
 sns.lmplot(
     x="value_eur",
@@ -413,14 +417,6 @@ plt.title('Relacja wartość-zarobki z podziałem na preferowaną nogę')
 save_plot(plt, "regression_value_wage_by_foot.png")
 plt.close()
 
-plt.figure(figsize=(10, 6))
-sns.regplot(x='overall', y='value_eur', data=df, 
-            scatter_kws={'alpha':0.3}, 
-            line_kws={'color':'red'})
-plt.yscale('log')  # Skala logarytmiczna = regresja wykładnicza
-plt.title('Regresja wykładnicza (skala log)')
-save_plot(plt,'simple_exp_regression.png')
-plt.close()
 
 print("\nAnaliza zakończona pomyślnie!")
 print(f"Wyniki zapisane w folderze: {output_dir}")

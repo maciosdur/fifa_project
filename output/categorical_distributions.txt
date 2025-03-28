@@ -23,3 +23,10 @@ GK: 11.08%
 ST: 9.20%
 CDM, CM: 4.95%
 CM: 3.77%
+
+--- short_name ---
+J. Rodríguez: 0.07%
+J. Hernández: 0.05%
+J. Brown: 0.04%
+Paulinho: 0.04%
+L. Rodríguez: 0.04%
