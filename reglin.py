@@ -13,7 +13,7 @@ class LinearRegressionClosedForm:
         # Dodajemy kolumnę jedynek dla biasu
         X_aug = np.c_[np.ones(X.shape[0]), X]
         
-        # Obliczanie parametrów: θ = (XᵀX)⁻¹Xᵀy
+        # Obliczanie parametrów: theta = (XTX)_inv*XTy
         XTX = np.dot(X_aug.T, X_aug)
         XTX_inv = np.linalg.inv(XTX)
         XTy = np.dot(X_aug.T, y)
@@ -25,11 +25,7 @@ class LinearRegressionClosedForm:
     def predict(self, X):
         return np.dot(X, self.weights) + self.bias
 
-# Ograniczenia zamkniętej formuły:
-# 1. Obliczenie odwrotności macierzy (XᵀX)⁻¹ jest kosztowne obliczeniowo dla dużych danych
-# 2. Może być niestabilne numerycznie gdy XᵀX jest źle uwarunkowana
-# 3. Wymaga, aby XᵀX była odwracalna (pełny rząd macierzy)
-# 4. Nie skalowalne dla bardzo dużych zbiorów danych (musi pomieścić całość w pamięci)
+
 class LinearRegressionGradientDescent:
     def __init__(self, learning_rate=0.01, n_iter=1000, batch_size=32):
         self.weights = None
@@ -88,7 +84,6 @@ try:
 except UnicodeDecodeError:
     df = pd.read_csv('players_22.csv', encoding='latin-1', low_memory=False)    
 
-    # Przygotowanie danych (przykład z Twojego projektu FIFA)
 features = ['age', 'value_eur', 'potential', 'height_cm', 'weight_kg',
             'pace', 'shooting', 'passing', 'dribbling', 'defending', 'physic']
 target = 'overall'
@@ -102,17 +97,16 @@ y = df_clean[target].values
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
-# Podział na zbiór treningowy i testowy
 X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
 
 # Trenowanie modeli
-# 1. Nasza implementacja zamkniętej formuły
+# 1. implementacja zamkniętej formuły
 lr_closed = LinearRegressionClosedForm()
 lr_closed.fit(X_train, y_train)
 y_pred_closed = lr_closed.predict(X_test)
 mse_closed = mean_squared_error(y_test, y_pred_closed)
 
-# 2. Nasza implementacja gradientu prostego
+# 2. implementacja gradientu prostego
 lr_gd = LinearRegressionGradientDescent(learning_rate=0.005, n_iter=100, batch_size=32)
 lr_gd.fit(X_train, y_train)
 y_pred_gd = lr_gd.predict(X_test)
