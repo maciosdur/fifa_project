@@ -118,7 +118,6 @@ mse_sklearn = mean_squared_error(y_test, y_pred_sklearn)
 print("MSE - Gradient prosty:", mse_gd)
 print("MSE - Scikit-learn:", mse_sklearn)
 
-# Wypisz nazwy cech i odpowiadające im wagi
 feature_names = preprocessor.get_feature_names_out()
 print("\nWagi gradientu prostego:")
 for name, weight in zip(feature_names, lr_gd.weights):
@@ -136,11 +135,10 @@ plt.xlabel('Iteracja')
 plt.ylabel('MSE')
 plt.show()
 
-# Przygotuj dane (bez podziału train_test_split)
+# bez podziału train_test_split
 X_full = df_clean[features]
 y_full = df_clean[target].values
 
-# Nie przetwarzaj od razu! Przetwarzaj w każdej fold osobno:
 kf = KFold(n_splits=3, shuffle=True, random_state=42)
 mse_scores = []
 r2_scores = []
@@ -149,7 +147,6 @@ for fold, (train_index, test_index) in enumerate(kf.split(X_full), 1):
     X_train, X_test = X_full.iloc[train_index], X_full.iloc[test_index]
     y_train, y_test = y_full[train_index], y_full[test_index]
 
-    # Pipeline fit/transform tylko na train!
     X_train_processed = preprocessor.fit_transform(X_train)
     X_test_processed = preprocessor.transform(X_test)
     if hasattr(X_train_processed, "toarray"):

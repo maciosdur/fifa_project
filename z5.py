@@ -128,11 +128,3 @@ if results:
     print(results_df.to_string(index=False, float_format=lambda x: f"{x:.2f}"))
 else:
     print("Żaden model nie został pomyślnie wytrenowany.")
-
-print("""
-Dlaczego przeszukiwanie hiperparametrów jest trudne?
-- Liczba możliwych kombinacji rośnie wykładniczo z liczbą parametrów i ich wartości.
-- Każda kombinacja wymaga osobnego treningu i walidacji modelu, co jest kosztowne obliczeniowo.
-- Wyniki mogą być niestabilne przy małych zbiorach lub dużej liczbie parametrów.
-- Często istnieje kompromis między dokładnością a złożonością modelu (overfitting/underfitting).
-""")

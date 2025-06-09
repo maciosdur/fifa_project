@@ -27,14 +27,13 @@ numeric_features = [
 ]
 categorical_features = ['preferred_foot']
 
-# Przygotuj target binarny: 0 = Left, 1 = Right
+#target binarny: 0 = Left, 1 = Right
 df_clean = df[features].dropna()
 df_clean = df_clean[df_clean['preferred_foot'].isin(['Left', 'Right'])].copy()
 df_clean['foot_bin'] = (df_clean['preferred_foot'] == 'Right').astype(int)
 X = df_clean[features].drop(columns=['preferred_foot'])
 y = df_clean['foot_bin']
 
-# Pipeline
 numeric_transformer = Pipeline([
     ('imputer', SimpleImputer(strategy='median')),
     ('scaler', StandardScaler())
@@ -67,7 +66,7 @@ rus = RandomUnderSampler(random_state=42)
 X_train_rus, y_train_rus = rus.fit_resample(X_train_processed, y_train)
 print("Rozkład klas po undersamplingu:", np.bincount(y_train_rus))
 
-# Funkcja ewaluacji
+# ewaluacja
 def evaluate(X_tr, y_tr, X_te, y_te, desc):
     clf = LogisticRegression(max_iter=1000)
     clf.fit(X_tr, y_tr)

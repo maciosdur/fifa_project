@@ -103,13 +103,13 @@ if hasattr(X_test_processed, "toarray"):
     X_test_processed = X_test_processed.toarray()
 
 
-# Gradient prosty bez regularyzacji
+# Gradient bez regularyzacji
 lr_gd = LinearRegressionGradientDescent(learning_rate=0.005, n_iter=100, batch_size=32, l2_alpha=0.0)
 lr_gd.fit(X_train_processed, y_train)
 y_pred_gd = lr_gd.predict(X_test_processed)
 mse_gd = mean_squared_error(y_test, y_pred_gd)
 
-# Gradient prosty z regularyzacją L2 (Ridge)
+# Gradient z regularyzacją L2 (Ridge)
 lr_gd_l2 = LinearRegressionGradientDescent(learning_rate=0.005, n_iter=100, batch_size=32, l2_alpha=0.1)
 lr_gd_l2.fit(X_train_processed, y_train)
 y_pred_gd_l2 = lr_gd_l2.predict(X_test_processed)
@@ -126,7 +126,6 @@ print("MSE - Gradient prosty:", mse_gd)
 print("MSE - Gradient prosty + L2:", mse_gd_l2)
 print("MSE - Scikit-learn:", mse_sklearn)
 
-# Wypisz nazwy cech i odpowiadające im wagi
 feature_names = preprocessor.get_feature_names_out()
 print("\nWagi gradientu prostego:")
 for name, weight in zip(feature_names, lr_gd.weights):
@@ -148,11 +147,11 @@ plt.xlabel('Iteracja')
 plt.ylabel('MSE')
 plt.show()
 
-# Przygotuj dane (bez podziału train_test_split)
+
 X_full = df_clean[features]
 y_full = df_clean[target].values
 
-# Nie przetwarzaj od razu! Przetwarzaj w każdej fold osobno:
+
 kf = KFold(n_splits=3, shuffle=True, random_state=42)
 mse_scores = []
 r2_scores = []

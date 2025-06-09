@@ -96,7 +96,6 @@ y_test = y_test.reset_index(drop=True)
 X_train_processed = preprocessor.fit_transform(X_train)
 X_test_processed = preprocessor.transform(X_test)
 
-# Dodaj to:
 if hasattr(X_train_processed, "toarray"):
     X_train_processed = X_train_processed.toarray()
 if hasattr(X_test_processed, "toarray"):
@@ -119,7 +118,7 @@ mse_sklearn = mean_squared_error(y_test, y_pred_sklearn)
 print("MSE - Gradient prosty:", mse_gd)
 print("MSE - Scikit-learn:", mse_sklearn)
 
-# Wypisz nazwy cech i odpowiadające im wagi
+
 feature_names = preprocessor.get_feature_names_out()
 print("\nWagi gradientu prostego:")
 for name, weight in zip(feature_names, lr_gd.weights):
@@ -137,11 +136,11 @@ plt.xlabel('Iteracja')
 plt.ylabel('MSE')
 plt.show()
 
-# Przygotuj dane (bez podziału train_test_split)
+# bez podziału train_test_split
 X_full = df_clean[features]
 y_full = df_clean[target].values
 
-# Nie przetwarzaj od razu! Przetwarzaj w każdej fold osobno:
+
 kf = KFold(n_splits=3, shuffle=True, random_state=42)
 mse_scores = []
 r2_scores = []
@@ -150,7 +149,7 @@ for fold, (train_index, test_index) in enumerate(kf.split(X_full), 1):
     X_train, X_test = X_full.iloc[train_index], X_full.iloc[test_index]
     y_train, y_test = y_full[train_index], y_full[test_index]
 
-    # Pipeline fit/transform tylko na train!
+    
     X_train_processed = preprocessor.fit_transform(X_train)
     X_test_processed = preprocessor.transform(X_test)
     if hasattr(X_train_processed, "toarray"):
@@ -175,18 +174,18 @@ print(f"Średnie R² (3-fold): {np.mean(r2_scores):.4f} (±{np.std(r2_scores):.4
 
 # --- Analiza wpływu liczby cech ---
 feature_subsets = [
-    ['age', 'overall', 'potential'],  # minimalny zestaw
-    ['age', 'overall', 'potential', 'pace', 'shooting', 'passing'],  # średni zestaw
-    features  # wszystkie cechy
+    ['age', 'overall', 'potential'],  
+    ['age', 'overall', 'potential', 'pace', 'shooting', 'passing'],  
+    features  
 ]
 
 for i, features_subset in enumerate(feature_subsets):
     X_sub = df_clean[features_subset]
     y_sub = df_clean[target]
-    # Wyodrębnij cechy numeryczne i kategoryczne dla tego podzbioru
+    
     numeric = [col for col in features_subset if col in numeric_features]
     categorical = [col for col in features_subset if col in categorical_features]
-    # Zbuduj nowy preprocessor dla tego podzbioru
+
     preproc = ColumnTransformer([
         ('num', numeric_transformer, numeric),
         ('cat', categorical_transformer, categorical)
@@ -207,7 +206,7 @@ for i, features_subset in enumerate(feature_subsets):
     print(f"Subset {i+1}: Train MSE = {train_mse:.4f}, Test MSE = {test_mse:.4f}")
 
 # --- Analiza wpływu wielkości zbioru danych ---
-sample_sizes = [len(df_clean)//10*i for i in range(1, 11)]
+sample_sizes = [10]+[len(df_clean)//10*i for i in range(1, 11)]
 train_size_errors = []
 test_size_errors = []
 repeats = 5
