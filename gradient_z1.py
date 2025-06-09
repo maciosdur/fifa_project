@@ -95,7 +95,6 @@ y_test = y_test.reset_index(drop=True)
 X_train_processed = preprocessor.fit_transform(X_train)
 X_test_processed = preprocessor.transform(X_test)
 
-# Dodaj to:
 if hasattr(X_train_processed, "toarray"):
     X_train_processed = X_train_processed.toarray()
 if hasattr(X_test_processed, "toarray"):
